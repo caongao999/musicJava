@@ -15,6 +15,7 @@ import javax.swing.UIManager;
  * @author ali
  */
 public class playmp3 extends javax.swing.JFrame {
+   
     Playlist pl = new Playlist();
     
     ArrayList updateList = new ArrayList();
@@ -29,6 +30,7 @@ public class playmp3 extends javax.swing.JFrame {
        this.setIconImage(new ImageIcon(getClass().getResource("music-icon.png")).getImage());  
   
     }
+    
 
     
 void updateList() {
@@ -215,6 +217,28 @@ void previous(){
 
         jButton2 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
+        InforPage = new javax.swing.JPanel();
+        CloseInfor = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        HMenu = new javax.swing.JPanel();
+        CloseMenu = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        logoutForm = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
         btnAdd = new javax.swing.JButton();
         btnRemove = new javax.swing.JButton();
         btnUp = new javax.swing.JButton();
@@ -225,9 +249,9 @@ void previous(){
         ply = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         stop = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        OpenInfor = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        OpenMenu = new javax.swing.JLabel();
 
         jButton2.setText("jButton2");
 
@@ -237,13 +261,118 @@ void previous(){
         setTitle("Mp3 Player");
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        InforPage.setBackground(new java.awt.Color(204, 255, 204));
+        InforPage.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        CloseInfor.setIcon(new javax.swing.ImageIcon("D:\\icon\\x-circle-solid-24.png")); // NOI18N
+        CloseInfor.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                CloseInforMouseClicked(evt);
+            }
+        });
+        InforPage.add(CloseInfor, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 10, -1, -1));
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel4.setText("Thông tin");
+        InforPage.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 30, 120, 30));
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel5.setIcon(new javax.swing.ImageIcon("D:\\icon\\user-solid-24.png")); // NOI18N
+        jLabel5.setText("Người dùng");
+        InforPage.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, -1, -1));
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel6.setIcon(new javax.swing.ImageIcon("D:\\icon\\info-circle-solid-24.png")); // NOI18N
+        jLabel6.setText("SongSync");
+        InforPage.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 250, 130, -1));
+
+        jPanel2.setBackground(new java.awt.Color(204, 204, 255));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel7.setText("Mô tả: Tận hưởng âm nhạc của riêng bạn");
+        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 280, 240, -1));
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        jLabel11.setText("Giới thiệu:");
+        jPanel2.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 110, -1));
+
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        jLabel12.setText("cập nhật");
+        jPanel2.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 80, 110, -1));
+
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        jLabel13.setText("Mật khẩu:");
+        jPanel2.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 110, -1));
+
+        jLabel14.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        jLabel14.setText("Tên tài khoản: ");
+        jPanel2.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 110, -1));
+
+        jLabel15.setBackground(new java.awt.Color(255, 204, 255));
+        jLabel15.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        jLabel15.setText("cập nhật");
+        jPanel2.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 20, 110, -1));
+
+        jLabel16.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        jLabel16.setText("cập nhật");
+        jPanel2.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 50, 110, -1));
+
+        InforPage.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 310, 130));
+
+        jPanel3.setBackground(new java.awt.Color(204, 204, 255));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        jLabel8.setText("Ngày ra đời: 4/1/2024");
+        jPanel3.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 240, -1));
+
+        jLabel9.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        jLabel9.setText("Mô tả: Tận hưởng âm hưởng của riêng bạn");
+        jPanel3.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 300, -1));
+
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
+        jLabel10.setText("Phiên bản: 1.0");
+        jPanel3.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 240, -1));
+
+        InforPage.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 300, 310, 120));
+
+        getContentPane().add(InforPage, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 40, 0, 460));
+
+        HMenu.setBackground(new java.awt.Color(204, 255, 255));
+        HMenu.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        CloseMenu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/cross.png"))); // NOI18N
+        CloseMenu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                CloseMenuMouseClicked(evt);
+            }
+        });
+        HMenu.add(CloseMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 0, -1, -1));
+
+        jLabel1.setIcon(new javax.swing.ImageIcon("D:\\learn java\\java-netbean\\musicPlayer\\assets\\backgroundBB.png")); // NOI18N
+        jLabel1.setText("Logo");
+        HMenu.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, 100, 40));
+
+        logoutForm.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        logoutForm.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/log-out.png"))); // NOI18N
+        logoutForm.setText("Log out");
+        logoutForm.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                logoutFormMouseClicked(evt);
+            }
+        });
+        HMenu.add(logoutForm, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 480, 90, -1));
+        HMenu.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 470, 140, 50));
+
+        getContentPane().add(HMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 0, 530));
+
         btnAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/p_add.png"))); // NOI18N
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
             }
         });
-        getContentPane().add(btnAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 80, -1));
+        getContentPane().add(btnAdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 370, 80, -1));
 
         btnRemove.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/p_remove.png"))); // NOI18N
         btnRemove.addActionListener(new java.awt.event.ActionListener() {
@@ -251,7 +380,7 @@ void previous(){
                 btnRemoveActionPerformed(evt);
             }
         });
-        getContentPane().add(btnRemove, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 80, -1));
+        getContentPane().add(btnRemove, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 370, 80, -1));
 
         btnUp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/p_up.png"))); // NOI18N
         btnUp.addActionListener(new java.awt.event.ActionListener() {
@@ -259,7 +388,7 @@ void previous(){
                 btnUpActionPerformed(evt);
             }
         });
-        getContentPane().add(btnUp, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 40, 70, -1));
+        getContentPane().add(btnUp, new org.netbeans.lib.awtextra.AbsoluteConstraints(910, 370, 70, -1));
 
         btnDown.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/p_down.png"))); // NOI18N
         btnDown.addActionListener(new java.awt.event.ActionListener() {
@@ -267,60 +396,66 @@ void previous(){
                 btnDownActionPerformed(evt);
             }
         });
-        getContentPane().add(btnDown, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 40, 70, -1));
+        getContentPane().add(btnDown, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 370, 70, -1));
 
         jScrollPane1.setViewportView(jPlaylist);
 
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 270, 90));
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 90, 900, 270));
 
-        jButton3.setText("|<");
+        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/fast-backward.png"))); // NOI18N
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 180, 50, -1));
+        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 480, 60, -1));
 
-        ply.setText("PLAY");
+        ply.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/play-button.png"))); // NOI18N
         ply.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 plyActionPerformed(evt);
             }
         });
-        getContentPane().add(ply, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 180, 70, -1));
+        getContentPane().add(ply, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 480, 70, -1));
 
-        jButton5.setText(">|");
+        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/fast-forward-button.png"))); // NOI18N
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 180, 50, -1));
+        getContentPane().add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 480, 50, -1));
 
         stop.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        stop.setText("[]");
+        stop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/pause-button.png"))); // NOI18N
         stop.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 stopActionPerformed(evt);
             }
         });
-        getContentPane().add(stop, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 180, -1, -1));
+        getContentPane().add(stop, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 480, -1, -1));
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/stop-icon_1.png"))); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+        OpenInfor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/information.png"))); // NOI18N
+        OpenInfor.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                OpenInforMouseClicked(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 0, 70, -1));
+        getContentPane().add(OpenInfor, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 0, 30, 40));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/Music-Library-icon.png"))); // NOI18N
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 230, 60, 80));
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel2.setText("Danh sách bài hát");
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 50, 170, 40));
 
-        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/1e64d86c-c498-442c-95ba-6652785a04d9.png"))); // NOI18N
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 210, 160, 110));
+        OpenMenu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/menu.png"))); // NOI18N
+        OpenMenu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                OpenMenuMouseClicked(evt);
+            }
+        });
+        getContentPane().add(OpenMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 40, 30));
 
-        setSize(new java.awt.Dimension(303, 356));
+        setSize(new java.awt.Dimension(1075, 563));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -358,12 +493,32 @@ next();       // TODO add your handling code here:
     private void stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopActionPerformed
 player.close();    
 stop.setBackground(Color.red);
-ply.setBackground(Color.white);// TODO add your handling code here:
+ply.setBackground(Color.white);
+// TODO add your handling code here:
     }//GEN-LAST:event_stopActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-  System.exit(0);        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void CloseMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CloseMenuMouseClicked
+CloseMenu();        // TODO add your handling code here:
+    }//GEN-LAST:event_CloseMenuMouseClicked
+
+    private void OpenMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OpenMenuMouseClicked
+OpenMenu();        // TODO add your handling code here:
+    }//GEN-LAST:event_OpenMenuMouseClicked
+
+    private void CloseInforMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CloseInforMouseClicked
+CloseInfor();        // TODO add your handling code here:
+    }//GEN-LAST:event_CloseInforMouseClicked
+
+    private void OpenInforMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OpenInforMouseClicked
+OpenInfor();        // TODO add your handling code here:
+    }//GEN-LAST:event_OpenInforMouseClicked
+
+    private void logoutFormMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutFormMouseClicked
+        // TODO add your handling code here:
+        Login login = new Login(); 
+        login.setVisible(true);
+        this.hide();
+    }//GEN-LAST:event_logoutFormMouseClicked
 
     /**
      * @param args the command line arguments
@@ -389,21 +544,98 @@ ply.setBackground(Color.white);// TODO add your handling code here:
             }
         });
     }
+    
+
+   private int WidthMenu =  160; 
+    private int HeightMenu =  560;
+    
+    private int WidthInfor = 350; 
+    private int HeightInfor = 460; 
+    
+    //Mở Infor: 
+    private void OpenInfor() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for(int i= 300; i <= WidthInfor; i++) {
+                    InforPage.setSize(i, HeightInfor);
+                }
+            }
+            
+        }).start();
+    }
+     private void CloseInfor() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for(int i= WidthInfor; i >= 0; i -- ) {
+                    InforPage.setSize(i, HeightInfor);
+                }
+            }
+            
+        }).start();
+    }
+    
+    // Mở menu
+    private void OpenMenu() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for(int i= 0; i <= WidthMenu; i++) {
+                    HMenu.setSize(i, HeightMenu);
+                }
+            }
+            
+        }).start();
+    };
+     private void CloseMenu() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for(int i= WidthMenu; i > 0; i -- ) {
+                    HMenu.setSize(i, HeightMenu);
+                }
+            }
+            
+        }).start();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel CloseInfor;
+    private javax.swing.JLabel CloseMenu;
+    private javax.swing.JPanel HMenu;
+    private javax.swing.JPanel InforPage;
+    private javax.swing.JLabel OpenInfor;
+    private javax.swing.JLabel OpenMenu;
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnDown;
     private javax.swing.JButton btnRemove;
     private javax.swing.JButton btnUp;
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JList<String> jPlaylist;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JLabel logoutForm;
     private javax.swing.JButton ply;
     private javax.swing.JButton stop;
     // End of variables declaration//GEN-END:variables

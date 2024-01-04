@@ -220,10 +220,6 @@ public class Register1 extends javax.swing.JFrame {
 
         jLabel13.setIcon(new javax.swing.ImageIcon("D:\\icon2\\locked.png")); // NOI18N
 
-        passForm.setText("jPasswordField1");
-
-        CpassForm.setText("jPasswordField2");
-
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -254,8 +250,8 @@ public class Register1 extends javax.swing.JFrame {
                                     .addComponent(jLabel9))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(passForm, javax.swing.GroupLayout.DEFAULT_SIZE, 407, Short.MAX_VALUE)
-                                    .addComponent(CpassForm))))))
+                                    .addComponent(passForm)
+                                    .addComponent(CpassForm, javax.swing.GroupLayout.DEFAULT_SIZE, 407, Short.MAX_VALUE))))))
                 .addContainerGap(73, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(

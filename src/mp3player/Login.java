@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import javax.swing.JOptionPane;
 
@@ -20,7 +21,7 @@ import javax.swing.JOptionPane;
  */
 public class Login extends javax.swing.JFrame {
     
-    ConnectData con = new ConnectData();
+    //ConnectData con = new ConnectData();
 
     /**
      * Creates new form Login
@@ -43,10 +44,10 @@ public class Login extends javax.swing.JFrame {
         userForm = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        passForm = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        passForm = new javax.swing.JPasswordField();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
 
@@ -58,7 +59,6 @@ public class Login extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
         jLabel2.setText("Đăng nhập");
 
-        userForm.setText("email");
         userForm.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 userFormActionPerformed(evt);
@@ -68,13 +68,6 @@ public class Login extends javax.swing.JFrame {
         jLabel3.setIcon(new javax.swing.ImageIcon("D:\\icon2\\user (1).png")); // NOI18N
 
         jLabel4.setIcon(new javax.swing.ImageIcon("D:\\icon2\\locked.png")); // NOI18N
-
-        passForm.setText("password");
-        passForm.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                passFormActionPerformed(evt);
-            }
-        });
 
         jButton1.setBackground(new java.awt.Color(255, 255, 255));
         jButton1.setFont(new java.awt.Font("Segoe UI Black", 1, 20)); // NOI18N
@@ -98,6 +91,8 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
+        passForm.setText("jPasswordField1");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -112,23 +107,23 @@ public class Login extends javax.swing.JFrame {
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(192, 192, 192))))
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(44, 44, 44)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(45, 45, 45)
-                            .addComponent(jLabel4)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(passForm, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(44, 44, 44)
-                            .addComponent(jLabel3)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(userForm, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(passForm, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(userForm, javax.swing.GroupLayout.PREFERRED_SIZE, 408, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(1, 1, 1)))
                 .addContainerGap(72, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -141,9 +136,9 @@ public class Login extends javax.swing.JFrame {
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(userForm, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(27, 27, 27)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(passForm, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(passForm)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE))
                 .addGap(33, 33, 33)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -178,13 +173,9 @@ public class Login extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_userFormActionPerformed
 
-    private void passFormActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passFormActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_passFormActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-      /* ConnectData connect = new ConnectData(); 
+
+       ConnectData connect = new ConnectData(); 
 Connection con = null; 
 try {
     con = connect.getConnection();
@@ -197,12 +188,15 @@ try {
     
     ResultSet rs = pst.executeQuery(); // Thực hiện truy vấn 
     
-    if (rs.next()) {
+    //các điều kiện
+    
+    
+    if (rs.next()) {   //điều kiện so với data
         playmp3 home = new playmp3(); 
         home.show();
         this.hide();
     } else {
-        JOptionPane.showConfirmDialog(this, "Thông tin đăng nhập không hợp lệ");
+        JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không chính xác");
     }
 } catch (Exception e) {
     e.printStackTrace(); // In lỗi chi tiết ra console để debug
@@ -210,27 +204,10 @@ try {
 } finally {
     // Đảm bảo ngắt kết nối sau khi sử dụng
     ConnectData.CloseConnection(con);
-} */
+} 
 
     
-  //var String user = userForm.getText();
-  //var String pass = passForm.getText();
   
-  try {
-      Class.forName("com.mysql.jdbc.Driver");
-      
-      Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/loginmusic", "root", "");
-      Statement smnt = conn.createStatement();
-      ResultSet rs = smnt.executeQuery("select * form login where user='"+userForm.getText() + "'and pass='"+passForm.getText()+"'");
-      
-      if(rs.next()) {
-           playmp3 home = new playmp3(); 
-        home.show();
-        this.hide();
-      }
-  } catch(Exception e) {
-       JOptionPane.showConfirmDialog(this, "Không thể kết nối hoặc có lỗi trong quá trình đăng nhập");
-  }
       
         
         
@@ -288,7 +265,7 @@ try {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JTextField passForm;
+    private javax.swing.JPasswordField passForm;
     private javax.swing.JTextField userForm;
     // End of variables declaration//GEN-END:variables
 }

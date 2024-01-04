@@ -22,7 +22,7 @@ public class ConnectData {
         //DriverManager.registerDriver(new com.mysql.jdbc.Driver());
         
         //Các thông số để kết nối
-        String url = "jdbc:mysql://localhost:3306/loginmusic"; 
+        String url = "jdbc:mysql://127.0.0.1:3306/loginmusic"; 
         String user = "root"; 
         String pass = ""; 
         

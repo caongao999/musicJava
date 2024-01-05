@@ -4,6 +4,9 @@
  */
 package mp3player;
 import data.ConnectData;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,6 +27,27 @@ public class Register1 extends javax.swing.JFrame {
      */
     public Register1() {
         initComponents();
+        userForm.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				passForm.requestFocus();
+			}
+		});
+        passForm.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				CpassForm.requestFocus();
+			}
+		});
+        CpassForm.addActionListener(new ActionListener() {	
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				registerUser();
+			}
+		});
     }
 
     /**
@@ -70,9 +94,9 @@ public class Register1 extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setIcon(new javax.swing.ImageIcon("D:\\icon2\\user (1).png")); // NOI18N
+        jLabel3.setIcon(new javax.swing.ImageIcon("src\\icon\\user (1).png")); // NOI18N
 
-        jLabel4.setIcon(new javax.swing.ImageIcon("D:\\icon2\\locked.png")); // NOI18N
+        jLabel4.setIcon(new javax.swing.ImageIcon("src\\icon\\locked.png")); // NOI18N
 
         jTextField3.setText("password");
         jTextField3.addActionListener(new java.awt.event.ActionListener() {
@@ -163,7 +187,7 @@ public class Register1 extends javax.swing.JFrame {
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setBackground(new java.awt.Color(0, 102, 102));
-        jLabel1.setIcon(new javax.swing.ImageIcon("D:\\icon2\\metaverse.png")); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon("src\\icon\\metaverse.png")); // NOI18N
         jLabel1.setText("jLabel1");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 520, 530));
 
@@ -192,9 +216,9 @@ public class Register1 extends javax.swing.JFrame {
             }
         });
 
-        jLabel8.setIcon(new javax.swing.ImageIcon("D:\\icon2\\user (1).png")); // NOI18N
+        jLabel8.setIcon(new javax.swing.ImageIcon("src\\icon\\user (1).png")); // NOI18N
 
-        jLabel9.setIcon(new javax.swing.ImageIcon("D:\\icon2\\locked.png")); // NOI18N
+        jLabel9.setIcon(new javax.swing.ImageIcon("src\\icon\\locked.png")); // NOI18N
 
         jButton2.setBackground(new java.awt.Color(255, 255, 255));
         jButton2.setFont(new java.awt.Font("Segoe UI Black", 1, 20)); // NOI18N
@@ -218,7 +242,7 @@ public class Register1 extends javax.swing.JFrame {
             }
         });
 
-        jLabel13.setIcon(new javax.swing.ImageIcon("D:\\icon2\\locked.png")); // NOI18N
+        jLabel13.setIcon(new javax.swing.ImageIcon("src\\icon\\locked.png")); // NOI18N
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);

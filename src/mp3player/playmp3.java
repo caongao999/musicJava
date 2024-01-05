@@ -226,8 +226,8 @@ void previous(){
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
-        jLabel15 = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jTextField2 = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
@@ -262,7 +262,7 @@ void previous(){
         InforPage.setBackground(new java.awt.Color(204, 255, 204));
         InforPage.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        CloseInfor.setIcon(new javax.swing.ImageIcon("src\\icon\\x-circle-solid-24.png")); // NOI18N
+        CloseInfor.setIcon(new javax.swing.ImageIcon("D:\\icon\\x-circle-solid-24.png")); // NOI18N
         CloseInfor.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 CloseInforMouseClicked(evt);
@@ -275,12 +275,12 @@ void previous(){
         InforPage.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 30, 120, 30));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel5.setIcon(new javax.swing.ImageIcon("src\\icon\\user-solid-24.png")); // NOI18N
+        jLabel5.setIcon(new javax.swing.ImageIcon("D:\\icon\\user-solid-24.png")); // NOI18N
         jLabel5.setText("Người dùng");
         InforPage.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, -1, -1));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel6.setIcon(new javax.swing.ImageIcon("src\\icon\\info-circle-solid-24.png")); // NOI18N
+        jLabel6.setIcon(new javax.swing.ImageIcon("D:\\icon\\info-circle-solid-24.png")); // NOI18N
         jLabel6.setText("SongSync");
         InforPage.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 250, 130, -1));
 
@@ -306,21 +306,19 @@ void previous(){
         jLabel14.setText("Tên tài khoản: ");
         jPanel2.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 110, -1));
 
-        jLabel15.setBackground(new java.awt.Color(255, 204, 255));
-        jLabel15.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
-        jPanel2.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 20, 110, -1));
+        jTextField1.setText("cập nhật");
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+        jPanel2.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 20, 140, -1));
 
-        jLabel16.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
-        jPanel2.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 50, 110, -1));
+        jTextField2.setText("cập nhật");
+        jPanel2.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 50, 140, 20));
+
         InforPage.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 310, 130));
-        /*
-        jLabel15.setText(objA.user);
-        jLabel16.setText(objA.pass);
-        JTextField user16 = new JTextField();
-        user16.setEditable(false);
-        user16.setBounds(120, 40, 100, 50);
-        user16.setText(objA.user);
-        user16.add(jPanel2);*/
+
         jPanel3.setBackground(new java.awt.Color(204, 204, 255));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -441,7 +439,6 @@ void previous(){
         OpenInfor.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 OpenInforMouseClicked(evt);
-                showUserInfo();
             }
         });
         getContentPane().add(OpenInfor, new org.netbeans.lib.awtextra.AbsoluteConstraints(1020, 0, 30, 40));
@@ -524,6 +521,10 @@ OpenInfor();        // TODO add your handling code here:
         login.setVisible(true);
         this.hide();
     }//GEN-LAST:event_logoutFormMouseClicked
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -632,8 +633,6 @@ OpenInfor();        // TODO add your handling code here:
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
-    private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -646,6 +645,8 @@ OpenInfor();        // TODO add your handling code here:
     private javax.swing.JList<String> jPlaylist;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     private javax.swing.JLabel logoutForm;
     private javax.swing.JButton ply;
     private javax.swing.JButton stop;

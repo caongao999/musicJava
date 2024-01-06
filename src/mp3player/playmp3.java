@@ -1,6 +1,7 @@
 
 package mp3player;
 import java.awt.Color;
+import mp3player.Login;
 import java.awt.GraphicsConfiguration;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -21,7 +22,6 @@ import data.ConnectData;
  */
 public class playmp3 extends javax.swing.JFrame {
     Playlist pl = new Playlist();
-    Login objA = new Login();
     ArrayList updateList = new ArrayList();
     javazoom.jl.player.Player player;
     File simpan;
@@ -195,14 +195,7 @@ void previous(){
         previous();
     }
 }
-
-
-
-                                       
-
-                                        
-
-                           
+       
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -305,18 +298,19 @@ void previous(){
         jLabel14.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
         jLabel14.setText("Tên tài khoản: ");
         jPanel2.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 110, -1));
-
-        jTextField1.setText("cập nhật");
+        
+        
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
             }
         });
         jPanel2.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 20, 140, -1));
-
-        jTextField2.setText("cập nhật");
         jPanel2.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 50, 140, 20));
-
+        jTextField1.setText("");
+        jTextField2.setText("");
+        jTextField1.setEditable(false);
+        jTextField2.setEditable(false);
         InforPage.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 310, 130));
 
         jPanel3.setBackground(new java.awt.Color(204, 204, 255));
@@ -512,7 +506,8 @@ CloseInfor();        // TODO add your handling code here:
     private void OpenInforMouseClicked(java.awt.event.MouseEvent evt) {
     	 
 	//GEN-FIRST:event_OpenInforMouseClicked
-OpenInfor();        // TODO add your handling code here:
+OpenInfor();      
+// TODO add your handling code here:
     }//GEN-LAST:event_OpenInforMouseClicked
 
     private void logoutFormMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutFormMouseClicked
@@ -550,14 +545,12 @@ OpenInfor();        // TODO add your handling code here:
             }
         });    
     }
-    
 
    private int WidthMenu =  160; 
     private int HeightMenu =  560;
     
     private int WidthInfor = 350; 
     private int HeightInfor = 460;
-    
     //Mở Infor: 
     private void OpenInfor() {
         new Thread(new Runnable() {
@@ -604,14 +597,12 @@ OpenInfor();        // TODO add your handling code here:
             }
             
         }).start();
-    }
-     
-     private void showUserInfo() {
-    	    // Hiển thị thông tin đăng nhập trên jLabel15 và jLabel1
-         // Bây giờ bạn có thể sử dụng userValue và passValue ở đây
-         jLabel15.setText("nguvl"+ objA.user);
-         jLabel16.setText("lmao" +objA.pass);
-    	}
+    } 
+     public playmp3(String tenTaiKhoan, String matKhau) {
+         initComponents(); // Gọi constructor mặc định
+         jTextField1.setText(tenTaiKhoan);
+         jTextField2.setText(matKhau);
+     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel CloseInfor;
     private javax.swing.JLabel CloseMenu;

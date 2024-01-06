@@ -14,41 +14,37 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import javax.swing.JOptionPane;
 
+import javax.print.DocFlavor.STRING;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
 /**
  *
  * @author ACER NITRO 5
  */
 public class Login extends javax.swing.JFrame {
-    /**
-     * Creates new form Login
-     */
-   /* public Login(playmp3 m) {
+    private String username = ""; // Initializing with a default value
+    private String password ="a";
+    public Login() {
         initComponents();
-        this.m = m;
-    }*/
-	public String user;
-	public String pass;
-	public Login() {
-        initComponents();
-        //focus dang nhap nhanh
-       userForm.addActionListener(new ActionListener() {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			passForm.requestFocus();
-		}
-	});
-       passForm.addActionListener(new ActionListener() {		
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			login();
-		}
-	});
+
+        userForm.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                passForm.requestFocus();
+            }
+        });
+
+        passForm.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                login();
+            }
+        });
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -105,7 +101,11 @@ public class Login extends javax.swing.JFrame {
                 jLabel6MouseClicked();
             }
         });
-
+        passForm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                passFormActionPerformed();
+            }
+        });
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -178,59 +178,52 @@ public class Login extends javax.swing.JFrame {
         );
 
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 0, 490, 530));
-        user = userForm.getText();
-        pass = passForm.getText();
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void userFormActionPerformed() {//GEN-FIRST:event_userFormActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_userFormActionPerformed
+
 //sủa lại để làm focus
-    @SuppressWarnings("deprecation")
-	private void login() {//GEN-FIRST:event_jButton1ActionPerformed //hung modify
-       ConnectData connect = new ConnectData(); 
-       Connection con = null; 
-    // Check if username and password are entered
-       if (userForm.getText().isEmpty() || passForm.getText().isEmpty()) {
-           JOptionPane.showMessageDialog(this, "Vui lòng nhập tên đăng nhập và mật khẩu");
-           return; // Stop execution if fields are not filled
-       }
-try {
-    con = connect.getConnection();
-    String sql = "SELECT * FROM login WHERE user=? AND pass=?"; 
-    PreparedStatement pst = con.prepareCall(sql);
-    // Thiết lập giá trị cho các tham số trong câu truy vấn
-    pst.setString(1, userForm.getText());
-    pst.setString(2, passForm.getText());
-    ResultSet rs = pst.executeQuery(); // Thực hiện truy vấn 
-    //các điều kiện
     
-    if (rs.next()) {   // Điều kiện so với data
-    	
-        playmp3 home = new playmp3();
-        home.show();
-        this.hide();
-     // Hiển thị thông tin đăng nhập
-    } else {
-        JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không chính xác");
-    }
-} catch (Exception e) {
-    e.printStackTrace(); // In lỗi chi tiết ra console để debug
-    JOptionPane.showConfirmDialog(this, "Không thể kết nối hoặc có lỗi trong quá trình đăng nhập");
-} finally {
-    // Đảm bảo ngắt kết nối sau khi sử dụng
-    ConnectData.CloseConnection(con);
-} 
+    @SuppressWarnings("deprecation")
+    private void login() {
+        ConnectData connect = new ConnectData();
+        Connection con = null;
+
+        if (userForm.getText().isEmpty() || passForm.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập tên đăng nhập và mật khẩu");
+            return;
+        }
+        try {
+            con = connect.getConnection();
+            String sql = "SELECT * FROM login WHERE user=? AND pass=?";
+            PreparedStatement pst = con.prepareCall(sql);
+
+            pst.setString(1, userForm.getText());
+            pst.setString(2, passForm.getText());
+            ResultSet rs = pst.executeQuery();
+
+            if (rs.next()) {
+                // Update the instance variable
+                username = userForm.getText();
+                password =passForm.getText();
+                playmp3 home = new playmp3(username, password);
+                home.show();
+                this.hide();
+            } else {
+                JOptionPane.showMessageDialog(this, "Tài khoản hoặc mật khẩu không chính xác");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showConfirmDialog(this, "Không thể kết nối hoặc có lỗi trong quá trình đăng nhập");
+        } finally {
+            ConnectData.CloseConnection(con);
+        }
     }
     //GEN-LAST:event_jButton1ActionPerformed
-
-    private void jLabel6MouseClicked() {//GEN-FIRST:event_jLabel6MouseClicked
-        // TODO add your handling code here:
-        Register1 register = new Register1(); 
+    private void jLabel6MouseClicked() {
+        Register1 register = new Register1();
         register.setVisible(true);
-        this.hide();
-    }//GEN-LAST:event_jLabel6MouseClicked
+    }
 
     /**
      * @param args the command line arguments
@@ -265,14 +258,28 @@ try {
             }
         });
     }
- 
+    //hung
+    private String userFormActionPerformed() {
+        if (userForm != null) {
+            return userForm.getText();
+        } else {
+            return "userForm is null";
+        }
+    }
+    //hung
+    private String passFormActionPerformed() {
+    	  if (passForm != null) {
+              return passForm.getText();
+          } else {
+              return "passForm is null";
+          }
+    }
     // Phương thức để kiểm tra đăng nhập
     public boolean performLogin() {
         // Thực hiện kiểm tra đăng nhập, trả về true nếu thành công
         // (Cần thêm mã kiểm tra đăng nhập ở đây)
         return true;
     }
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
@@ -286,14 +293,4 @@ try {
     private  javax.swing.JPasswordField passForm;
     private  javax.swing.JTextField userForm;
     // End of variables declaration//GEN-END:variables
-
-    public String getUser() {
-    	user = userForm.getText();
-        return user;
-    }
-    @SuppressWarnings("deprecation")
-	public String getPass() {
-    	pass = passForm.getText();
-        return pass;
-    }
 }

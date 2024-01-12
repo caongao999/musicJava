@@ -12,10 +12,23 @@ import javax.swing.AbstractButton;
 import javax.swing.DefaultListModel;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
-
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
+import javax.swing.table.DefaultTableModel;
 import data.ConnectData;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 /**
  *
  * @author ali
@@ -28,6 +41,8 @@ public class playmp3 extends javax.swing.JFrame {
     playmp3() {
         initComponents();
        this.setIconImage(new ImageIcon(getClass().getResource("music-icon.png")).getImage());  
+        playlistevent();
+       
 //jLabel15 and jLabel16
     }
      
@@ -45,10 +60,31 @@ void updateList() {
 
 //panel kontrol
 
-void add(){
-    pl.add(this);
-    updateList();
+void add() { //Thêm thông báo trùng lặp
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+    int result = fileChooser.showOpenDialog(this);
+
+    if (result == JFileChooser.APPROVE_OPTION) {
+        File selectedFile = fileChooser.getSelectedFile();
+
+        if (pl.ls.contains(selectedFile)) {
+            int option = JOptionPane.showConfirmDialog(this, "Bài hát đã tồn tại. Bạn có muốn thay thế nó không?",
+                    "Tệp đã tồn tại", JOptionPane.YES_NO_OPTION);
+
+            if (option == JOptionPane.YES_OPTION) {
+
+                int index = pl.ls.indexOf(selectedFile);
+                pl.ls.set(index, selectedFile);
+            }
+        } else {
+            pl.ls.add(selectedFile);
+            updateList();
+        }
+    }
 }
+
 
 void remove(){
     try{
@@ -195,7 +231,36 @@ void previous(){
         previous();
     }
 }
-       
+void playlistevent() {//MouseEvent cho Playlist
+    jPlaylist.addMouseListener(new MouseAdapter() {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if (e.getClickCount() == 1) {
+                int index = jPlaylist.getSelectedIndex();
+                if (index >= 0) {
+                    putar();
+                }
+            }
+        }
+    });
+
+    jPlaylist.addMouseMotionListener(new MouseMotionAdapter() {
+        @Override
+        public void mouseMoved(MouseEvent e) {
+            int index = jPlaylist.locationToIndex(e.getPoint());
+            jPlaylist.clearSelection(); 
+
+            if (index >= 0) {
+                jPlaylist.setSelectedIndex(index);
+            }
+        }
+
+        public void mouseExited(MouseEvent e) {
+            jPlaylist.clearSelection(); 
+        }
+    });
+    
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -255,7 +320,6 @@ void previous(){
         InforPage.setBackground(new java.awt.Color(204, 255, 204));
         InforPage.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        CloseInfor.setIcon(new javax.swing.ImageIcon("D:\\icon\\x-circle-solid-24.png")); // NOI18N
         CloseInfor.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 CloseInforMouseClicked(evt);
@@ -268,12 +332,10 @@ void previous(){
         InforPage.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 30, 120, 30));
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel5.setIcon(new javax.swing.ImageIcon("D:\\icon\\user-solid-24.png")); // NOI18N
         jLabel5.setText("Người dùng");
         InforPage.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, -1, -1));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel6.setIcon(new javax.swing.ImageIcon("D:\\icon\\info-circle-solid-24.png")); // NOI18N
         jLabel6.setText("SongSync");
         InforPage.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 250, 130, -1));
 
@@ -298,21 +360,36 @@ void previous(){
         jLabel14.setFont(new java.awt.Font("Segoe UI", 3, 14)); // NOI18N
         jLabel14.setText("Tên tài khoản: ");
         jPanel2.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 110, -1));
-        
-        
+
+        jTextField1.setText("cập nhật");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
             }
         });
         jPanel2.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 20, 140, -1));
-        jPanel2.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 50, 140, 20));
-        jTextField1.setText("");
-        jTextField2.setText("");
-        jTextField1.setEditable(false);
-        jTextField2.setEditable(false);
-        InforPage.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 310, 130));
 
+        jTextField2.setText("cập nhật");
+        jPanel2.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 50, 140, 20));
+
+        InforPage.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 310, 130));
+        searchfield = new PlaceholderTextField("Search");//PlaceHolder
+        searchfield.getDocument().addDocumentListener(new DocumentListener() {//Tính năng tìm Kiếm
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+            	updatePlaylist();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+            	updatePlaylist();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {        
+            }
+        });
+        
         jPanel3.setBackground(new java.awt.Color(204, 204, 255));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -343,7 +420,6 @@ void previous(){
         });
         HMenu.add(CloseMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 0, -1, -1));
 
-        jLabel1.setIcon(new javax.swing.ImageIcon("D:\\learn java\\java-netbean\\musicPlayer\\assets\\backgroundBB.png")); // NOI18N
         jLabel1.setText("Logo");
         HMenu.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, 100, 40));
 
@@ -448,10 +524,28 @@ void previous(){
             }
         });
         getContentPane().add(OpenMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 40, 30));
+        getContentPane().add(searchfield, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 30, 540, 40));
 
         setSize(new java.awt.Dimension(1075, 563));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+    
+    private void updatePlaylist() {//Tính năng tìm kiếm
+        String searchTerm = searchfield.getText().toLowerCase(); 
+        DefaultListModel model = new DefaultListModel();
+
+        for (int i = 0; i < updateList.size(); i++) {
+            File file = (File) updateList.get(i);
+            String itemName = file.getName();
+
+            if (itemName.toLowerCase().contains(searchTerm)) {
+                model.addElement((i + 1) + " | " + itemName);
+            }
+        }
+
+        jPlaylist.setModel(model);
+    }
+
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
          add();
@@ -459,15 +553,15 @@ void previous(){
 
     private void plyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plyActionPerformed
 putar();   
-
+    
 ply.setBackground(Color.GREEN);
 stop.setBackground(Color.white);// TODO add your handling code here:
     }//GEN-LAST:event_plyActionPerformed
-
+    
     private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
       remove();  // TODO add your handling code here:
     }//GEN-LAST:event_btnRemoveActionPerformed
-
+   
     private void btnUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpActionPerformed
     up();    // TODO add your handling code here:
     }//GEN-LAST:event_btnUpActionPerformed
@@ -520,7 +614,8 @@ OpenInfor();
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
-
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -583,8 +678,7 @@ OpenInfor();
                 for(int i= 0; i <= WidthMenu; i++) {
                     HMenu.setSize(i, HeightMenu);
                 }
-            }
-            
+            }    
         }).start();
     };
      private void CloseMenu() {
@@ -603,6 +697,7 @@ OpenInfor();
          jTextField1.setText(tenTaiKhoan);
          jTextField2.setText(matKhau);
      }
+     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel CloseInfor;
     private javax.swing.JLabel CloseMenu;
@@ -640,6 +735,71 @@ OpenInfor();
     private javax.swing.JTextField jTextField2;
     private javax.swing.JLabel logoutForm;
     private javax.swing.JButton ply;
+    private javax.swing.JTextField searchfield;
     private javax.swing.JButton stop;
     // End of variables declaration//GEN-END:variables
 }
+//Class PlaceHolder
+class PlaceholderTextField extends JTextField implements FocusListener, CaretListener {
+    private String placeholder;
+    private boolean isPlaceholderVisible = true;
+    public PlaceholderTextField(String placeholder) {
+        this.placeholder = placeholder;
+        addFocusListener(this);
+        addCaretListener(this);
+    }
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (isPlaceholderVisible && (getText().isEmpty() || hasFocus())) {
+            Font sansSerifFont = new Font(Font.SANS_SERIF, Font.ITALIC, getHeight() / 2);
+            g.setFont(sansSerifFont);
+            g.setColor(Color.GRAY);
+            int textWidth = g.getFontMetrics().stringWidth(placeholder);
+            int xShift = getWidth() / 30;
+            int x = xShift;
+            int y = (getHeight() - g.getFontMetrics().getHeight()) / 2 + g.getFontMetrics().getAscent();
+            g.drawString(placeholder, x, y);
+        }
+    }
+    @Override
+    public void focusGained(FocusEvent e) {
+        isPlaceholderVisible = false;
+        repaint();
+    }
+    @Override
+    public void focusLost(FocusEvent e) {
+        if (getText().isEmpty()) {
+            isPlaceholderVisible = true;
+            repaint();
+        }
+    }
+    @Override
+    public void caretUpdate(CaretEvent e) {
+        if (getText().isEmpty()) {
+            isPlaceholderVisible = true;
+        } else {
+            isPlaceholderVisible = false;
+        }
+        repaint();
+    }
+}
+
+//tình trạng : không dùng
+class CustomDefaultTableModel extends DefaultTableModel {
+    public CustomDefaultTableModel(Object[][] data, Object[] columnNames) {
+        super(data, columnNames);
+    }
+    @Override
+    public int getRowCount() {
+        int rowCount = super.getRowCount();
+        for (int i = 0; i < super.getRowCount(); i++) {
+            if (getValueAt(i, 0) == null) {
+                rowCount--;
+            }
+        }
+        return rowCount;
+    }
+}
+
+

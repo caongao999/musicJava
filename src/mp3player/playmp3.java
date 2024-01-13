@@ -231,6 +231,23 @@ void previous(){
         previous();
     }
 }
+/*
+private boolean isShuffleEnabled = false;
+
+public void setShuffleEnabled(boolean shuffleEnabled) {
+    this.isShuffleEnabled = shuffleEnabled;
+}
+
+public void playNextRandom() {
+    if (isShuffleEnabled) {
+        int randomIndex = // Logic để chọn ngẫu nhiên một index từ danh sách các bài hát
+        jPlaylist.setSelectedIndex(randomIndex);
+    } else {
+        jPlaylist.setSelectedIndex(index);
+    }
+}
+*/
+
 void playlistevent() {//MouseEvent cho Playlist
     jPlaylist.addMouseListener(new MouseAdapter() {
         @Override

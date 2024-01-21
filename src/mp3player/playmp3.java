@@ -4,23 +4,20 @@ import java.awt.Color;
 import java.awt.Dimension;
 
 import mp3player.Login;
-import preDemontease.PlaceholderTextField;
 
 import java.awt.GraphicsConfiguration;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.io.*;
-
-import javax.sound.sampled.FloatControl;
 import javax.swing.AbstractButton;
 import javax.swing.DefaultListModel;
 import java.util.ArrayList;
 import java.util.Comparator;
-
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
@@ -29,6 +26,14 @@ import javax.swing.event.CaretListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
+
+import org.jaudiotagger.audio.AudioFile;
+import org.jaudiotagger.audio.AudioFileIO;
+import org.jaudiotagger.audio.exceptions.CannotReadException;
+import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
+import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
+import org.jaudiotagger.tag.TagException;
+
 import data.ConnectData;
 import javazoom.jl.decoder.Bitstream;
 import javazoom.jl.decoder.JavaLayerException;
@@ -36,9 +41,11 @@ import javazoom.jl.player.JavaSoundAudioDevice;
 import javazoom.jl.player.Player;
 import javazoom.jl.player.advanced.PlaybackEvent;
 import javazoom.jl.player.advanced.PlaybackListener;
-
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseAdapter;
@@ -46,27 +53,34 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.metal.MetalSliderUI;
+
+//researching package
+import playmp3.system.Helpers;
+
 /**
  *
  * @author ali
  */
 public class playmp3 extends javax.swing.JFrame {
+    //volume variables
     private static final int MAX_VOLUME = 150;
     private static final float BOOST_THRESHOLD = 100.0f;
-    private Timer timer;
-    
+    private int duration;
+    //default
     Playlist pl = new Playlist();
     ArrayList updateList = new ArrayList();
     javazoom.jl.player.Player player;
     File simpan;
     playmp3() {
         initComponents();
-       this.setIconImage(new ImageIcon(getClass().getResource("music-icon.png")).getImage());  
+        this.setIconImage(new ImageIcon(getClass().getResource("music-icon.png")).getImage());  
         playlistevent();
         addSearchFieldListener();
     }
@@ -82,17 +96,15 @@ void updateList() {
 
     }
 
-
-//panel kontrol
+//panel control
 
 private File lastChosenDirectory; 
-
+//thêm và kiểm tra - đơn 
 void add() {
     JFileChooser fileChooser = new JFileChooser();
     if (lastChosenDirectory != null) {
         fileChooser.setCurrentDirectory(lastChosenDirectory);
     }
-    
     FileNameExtensionFilter audioFilter = new FileNameExtensionFilter("Audio Files", "mp3", "wav", "ogg");
     fileChooser.setFileFilter(audioFilter);
     int result = fileChooser.showOpenDialog(this);
@@ -117,6 +129,7 @@ void add() {
         }
     }
 }
+//thêm từ thư mục 
 void addAllFilesInDirectory() {
     JFileChooser fileChooser = new JFileChooser();
     fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -141,7 +154,7 @@ void addAllFilesInDirectory() {
         }
     }
 }
-
+//kiểm tra định dạng
 private boolean isAudioFile(File file) {
     String fileName = file.getName().toLowerCase();
     return fileName.endsWith(".mp3") || fileName.endsWith(".wav") || fileName.endsWith(".ogg");
@@ -195,33 +208,28 @@ static int a = 0;
 private boolean isPlaying = false;
 
 void putar() {
-	  if (!isPlaying) {
-	        try {
-	            int p1;
-	            if (searchfield.getText().isEmpty()) {
-	                p1 = jPlaylist.getSelectedIndex();
-	            } else {
-	                int selectedIndex = jPlaylist.getSelectedIndex();
-	                DefaultListModel model = (DefaultListModel) jPlaylist.getModel();
-	                SearchResult selectedResult = (SearchResult) model.getElementAt(selectedIndex);
-	                p1 = selectedResult.getIndex();
-	            }
-	            play1 = (File) this.updateList.get(p1);;
+    if (!isPlaying) {
+    	currentTime = 0;
+        if (player != null) {
+            player.close();
+        }
+
+        try {
+            int p1;
+            if (searchfield.getText().isEmpty()) {
+                p1 = jPlaylist.getSelectedIndex();
+            } else {
+                int selectedIndex = jPlaylist.getSelectedIndex();
+                DefaultListModel model = (DefaultListModel) jPlaylist.getModel();
+                SearchResult selectedResult = (SearchResult) model.getElementAt(selectedIndex);
+                p1 = selectedResult.getIndex();
+            }
+
+            play1 = (File) this.updateList.get(p1);
+            initPlayer(play1);
             FileInputStream fis = new FileInputStream(play1);
             BufferedInputStream bis = new BufferedInputStream(fis);
             player = new javazoom.jl.player.Player(bis);
-            timer = new Timer(true);
-            timer.scheduleAtFixedRate(new TimerTask() {
-                @Override
-                public void run() {
-                    progressBar.setValue((int) player.getPosition());
-                    if (player.isComplete()) {
-                        // Bài hát kết thúc, dừng Timer và thiết lập isPlaying thành false
-                        timer.cancel();
-                        isPlaying = false;
-                    }
-                }
-            }, 0, 1000); // Cập nhật mỗi giây
             new Thread() {
                 @Override
                 public void run() {
@@ -232,106 +240,85 @@ void putar() {
                     }
                 }
             }.start();
+
             isPlaying = true;
-             }
-             catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("Problem playing file");
             System.out.println(e);
         }
     } else {
-        // Tạm dừng bài hát khi nút được nhấp
         player.close();
-        timer.cancel(); 
         isPlaying = false;
     }
 }
-
 File sa;
-void next(){
-    if(a==0){
-        try{
-            int s1 = jPlaylist.getSelectedIndex() +1;
+void next() {
+    if (a == 0) {
+        player.close();  // Close the current player
+        a = 1;
+    	currentTime = 0;
+        try {
+            int s1 = jPlaylist.getSelectedIndex() + 1;
             sa = (File) this.pl.ls.get(s1);
             FileInputStream fis = new FileInputStream(sa);
             BufferedInputStream bis = new BufferedInputStream(fis);
+            initPlayer(sa);
             player = new javazoom.jl.player.Player(bis);
-            a =1;
+
             jPlaylist.setSelectedIndex(s1);
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println("Problem playing file");
             System.out.println(e);
         }
-        
-        new Thread(){
-            @Override
-            public void run(){
-                try{
-                    player.play();
-                
-            }catch (Exception e){
-            }
-        }
-    }.start();
-    }else{
+
+        play();  // Start playing the next song
+    } else {
         player.close();
-        a=0;
+        a = 0;
         next();
     }
-
 }
 
-void previous(){
-    if(a==0){
-        try{
-            int s1 = jPlaylist.getSelectedIndex() -1;
+void previous() {
+    if (a == 0) {
+        player.close();  // Close the current player
+        a = 1;
+    	currentTime = 0;
+        try {
+            int s1 = jPlaylist.getSelectedIndex() - 1;
             sa = (File) this.pl.ls.get(s1);
             FileInputStream fis = new FileInputStream(sa);
             BufferedInputStream bis = new BufferedInputStream(fis);
+            initPlayer(sa);
             player = new javazoom.jl.player.Player(bis);
-            a =1;
+
             jPlaylist.setSelectedIndex(s1);
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println("Problem playing file");
             System.out.println(e);
         }
-        
-        new Thread(){
-            @Override
-            public void run(){
-                try{
-                    player.play();
-                
-            }catch (Exception e){
-            }
-        }
-    }.start();
-        
-    }else{
+
+        play();  // Start playing the previous song
+    } else {
         player.close();
-        a=0;
+        a = 0;
         previous();
     }
 }
-/*
-private boolean isShuffleEnabled = false;
 
-public void setShuffleEnabled(boolean shuffleEnabled) {
-    this.isShuffleEnabled = shuffleEnabled;
+void play() {
+    new Thread(() -> {
+        try {
+            player.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }).start();
+
+    isPlaying = true;
 }
-
-public void playNextRandom() {
-    if (isShuffleEnabled) {
-        int randomIndex = // Logic để chọn ngẫu nhiên một index từ danh sách các bài hát
-        jPlaylist.setSelectedIndex(randomIndex);
-    } else {
-        jPlaylist.setSelectedIndex(index);
-    }
-}
-*/
-
 private int lastSelectedIndex = -1;
 private boolean isMouseOverList = false;
-
 void playlistevent() {
     jPlaylist.addMouseListener(new MouseAdapter() {
         @Override
@@ -343,17 +330,14 @@ void playlistevent() {
                 }
             }
         }
-
         @Override
         public void mouseEntered(MouseEvent e) {
             isMouseOverList = true;
         }
-
         @Override
         public void mouseExited(MouseEvent e) {
             isMouseOverList = false;
         }
-
         @Override
         public void mouseReleased(MouseEvent e) {
             int index = jPlaylist.locationToIndex(e.getPoint());
@@ -403,19 +387,21 @@ void playlistevent() {
         btnRemove = new javax.swing.JButton();
         btnUp = new javax.swing.JButton();
         btnDown = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jPlaylist = new javax.swing.JList<>();
+        shuffleB = new javax.swing.JButton();
+        progressBar = new javax.swing.JProgressBar();
         jButton3 = new javax.swing.JButton();
+        stop = new javax.swing.JButton();
         ply = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
-        stop = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jPlaylist = new javax.swing.JList<>();
         OpenInfor = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         OpenMenu = new javax.swing.JLabel();
-        searchfield = new javax.swing.JTextField();
-        shuffleB = new javax.swing.JButton();
-        volumnSlider = new javax.swing.JSlider();
-        progressBar = new javax.swing.JProgressBar();
+        searchfield = new PlaceholderTextField("Tìm kiếm");
+        jRadioButton1 = new javax.swing.JRadioButton();
+        currentDur = new javax.swing.JLabel();
+        totaldur = new javax.swing.JLabel();
 
         jButton2.setText("jButton2");
 
@@ -434,11 +420,17 @@ void playlistevent() {
             }
         });
         InforPage.add(CloseInfor, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 10, -1, -1));
-
+        
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel4.setText("Thông tin");
         InforPage.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 30, 120, 30));
-
+        timerprogress = new javax.swing.Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateProgressBar();
+            }
+        });
+        timerprogress.start();
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel5.setText("Người dùng");
         InforPage.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, -1, -1));
@@ -449,7 +441,7 @@ void playlistevent() {
 
         jPanel2.setBackground(new java.awt.Color(204, 204, 255));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
+        
         jLabel7.setText("Mô tả: Tận hưởng âm nhạc của riêng bạn");
         jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 280, 240, -1));
 
@@ -560,9 +552,14 @@ void playlistevent() {
         });
         getContentPane().add(btnDown, new org.netbeans.lib.awtextra.AbsoluteConstraints(830, 370, 70, -1));
 
-        jScrollPane1.setViewportView(jPlaylist);
-
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 90, 900, 270));
+        shuffleB.setText("Shuffle");
+        shuffleB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                shuffleBActionPerformed(evt);
+            }
+        });
+        getContentPane().add(shuffleB, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, -1, -1));
+        getContentPane().add(progressBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 430, 210, -1));
 
         jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/fast-backward.png"))); // NOI18N
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -570,23 +567,7 @@ void playlistevent() {
                 jButton3ActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 480, 60, -1));
-
-        ply.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/play-button.png"))); // NOI18N
-        ply.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                plyActionPerformed(evt);
-            }
-        });
-        getContentPane().add(ply, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 480, 70, -1));
-
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/fast-forward-button.png"))); // NOI18N
-        jButton5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton5ActionPerformed(evt);
-            }
-        });
-        getContentPane().add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 480, 50, -1));
+        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 450, -1, -1));
 
         stop.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         stop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/pause-button.png"))); // NOI18N
@@ -595,7 +576,27 @@ void playlistevent() {
                 stopActionPerformed(evt);
             }
         });
-        getContentPane().add(stop, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 480, -1, -1));
+        getContentPane().add(stop, new org.netbeans.lib.awtextra.AbsoluteConstraints(560, 450, -1, -1));
+
+        ply.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/play-button.png"))); // NOI18N
+        ply.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                plyActionPerformed(evt);
+            }
+        });
+        getContentPane().add(ply, new org.netbeans.lib.awtextra.AbsoluteConstraints(510, 450, -1, -1));
+
+        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/fast-forward-button.png"))); // NOI18N
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 450, -1, -1));
+
+        jScrollPane1.setViewportView(jPlaylist);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 90, 900, 270));
 
         OpenInfor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/information.png"))); // NOI18N
         OpenInfor.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -617,13 +618,14 @@ void playlistevent() {
         });
         getContentPane().add(OpenMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 40, 30));
 
-        searchfield = new PlaceholderTextField("Tìm kiếm");
         getContentPane().add(searchfield, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 30, 540, 40));
 
-        shuffleB.setText("Shuffle");
-        getContentPane().add(shuffleB, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 370, -1, -1));
-        getContentPane().add(volumnSlider, new org.netbeans.lib.awtextra.AbsoluteConstraints(780, 470, -1, -1));
-        getContentPane().add(progressBar, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 460, 400, -1));
+        jRadioButton1.setText("Nhập từ thư mục");
+        getContentPane().add(jRadioButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 410, -1, -1));
+
+        getContentPane().add(currentDur, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 430, -1, -1));
+
+        getContentPane().add(totaldur, new org.netbeans.lib.awtextra.AbsoluteConstraints(690, 430, -1, -1));
 
         setSize(new java.awt.Dimension(1075, 563));
         setLocationRelativeTo(null);
@@ -646,29 +648,26 @@ void playlistevent() {
         });
     }
     
+    //chức năng tìm kiếm
     private void updatePlaylist() {
 	    String originalSearchTerm = searchfield.getText().toLowerCase().trim();
 	    DefaultListModel model = new DefaultListModel();
-
 	    for (int i = 0; i < updateList.size(); i++) {
 	        File file = (File) updateList.get(i);
 	        String itemName = file.getName();
 	        String searchTerm = originalSearchTerm.toLowerCase();
 	        int priority = calculatePriority(itemName, searchTerm);
-
 	        if (priority > 0) {
 	            model.addElement(new SearchResult(i, itemName, priority));
 	        }
 	    }
-
 	    model = sortModel(model);
 	    jPlaylist.setModel(model);
 	}
-
-	private int calculatePriority(String itemName, String searchTerm) {
+    //thiết đặt mức độ ưu tiên kết quả tìm kiếm
+    private int calculatePriority(String itemName, String searchTerm) {
 	    String[] searchTerms = searchTerm.split("\\s+");
 	    int priority = 0;
-
 	    int lastMatchIndex = -1;
 	    for (String term : searchTerms) {
 	        term = term.toLowerCase();
@@ -677,16 +676,14 @@ void playlistevent() {
 	            priority += index - lastMatchIndex;
 	            lastMatchIndex = index;
 	        } else {
-	            return 0; // Not all search terms are matched in order
+	            return 0;
 	        }
 	    }
-
 	    return priority;
 	}
-
-private DefaultListModel sortModel(DefaultListModel model) {
+    //xếp bảng các kết quả tìm kiếm
+    private DefaultListModel sortModel(DefaultListModel model) {
     ArrayList<SearchResult> resultList = new ArrayList<>();
-
     for (int i = 0; i < model.getSize(); i++) {
         SearchResult result = (SearchResult) model.getElementAt(i);
         resultList.add(result);
@@ -696,21 +693,16 @@ private DefaultListModel sortModel(DefaultListModel model) {
     for (SearchResult result : resultList) {
         sortedModel.addElement(result);
     }
-
     return sortedModel;
 }
 
-
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-         add();
+         if (jRadioButton1.isSelected()) {
+             addAllFilesInDirectory();
+         } else {
+             add();
+         }
     }//GEN-LAST:event_btnAddActionPerformed
-
-    private void plyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plyActionPerformed
-putar();   
-    
-ply.setBackground(Color.GREEN);
-stop.setBackground(Color.white);// TODO add your handling code here:
-    }//GEN-LAST:event_plyActionPerformed
     
     private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
       remove();  // TODO add your handling code here:
@@ -723,21 +715,6 @@ stop.setBackground(Color.white);// TODO add your handling code here:
     private void btnDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDownActionPerformed
 down();        // TODO add your handling code here:
     }//GEN-LAST:event_btnDownActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-previous();        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-next();       // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
-
-    private void stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopActionPerformed
-player.close();    
-stop.setBackground(Color.red);
-ply.setBackground(Color.white);
-// TODO add your handling code here:
-    }//GEN-LAST:event_stopActionPerformed
 
     private void CloseMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CloseMenuMouseClicked
 CloseMenu();        // TODO add your handling code here:
@@ -768,12 +745,36 @@ OpenInfor();
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
-    
+
+    private void plyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plyActionPerformed
+        putar();
+        ply.setBackground(Color.GREEN);
+        stop.setBackground(Color.white);// TODO add your handling code here:
+    }//GEN-LAST:event_plyActionPerformed
+
+    private void stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopActionPerformed
+        player.close();
+        stop.setBackground(Color.red);
+        ply.setBackground(Color.white);
+        // TODO add your handling code here:
+    }//GEN-LAST:event_stopActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        next();     // TODO add your handling code here:
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        previous();        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void shuffleBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shuffleBActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_shuffleBActionPerformed
+    //kiểm tra âm lượng
     private static void showBoostWarningDialog(float volume, JSlider volumeSlider) {
         int choice = JOptionPane.showConfirmDialog(null,
                 "Bạn đang sử dụng Volume Boost, điều này có thể gây hư hại cho tai của bạn và thiết bị nghe nhạc.\nBạn có chắc chắn muốn tiếp tục?",
                 "Cảnh báo Volume Boost", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-
         if (choice == JOptionPane.YES_OPTION) {
             setVolume(volume);
         } else {
@@ -874,6 +875,34 @@ OpenInfor();
          jTextField1.setText(tenTaiKhoan);
          jTextField2.setText(matKhau);
      }
+     public void initPlayer(File sa) throws JavaLayerException, CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException {
+         java.util.logging.Logger.getLogger("org.jaudiotagger").setLevel(Level.OFF);
+         AudioFile audioFile = AudioFileIO.read(sa);
+         duration = audioFile.getAudioHeader().getTrackLength();
+         FileInputStream fileInputStream = new FileInputStream(sa);
+         System.out.println("Duration set in initPlayer: " + duration);
+         long minutess = duration/60;
+         long secondss = duration%60;
+         String formattedDuration = String.format("%02d:%02d", minutess, secondss);   
+         totaldur.setText(formattedDuration);
+     }
+     public int getDuration() {
+         return duration;
+     }
+     
+     private void updateProgressBar() {
+    	    if (isPlaying) {
+    	        currentTime++;
+    	        progressBar.setValue(currentTime);
+    	        updateCurrentTimeLabel();
+    	    }
+    	}
+     private void updateCurrentTimeLabel() {
+    	    long minutes = currentTime / 60;
+    	    long seconds = currentTime % 60;
+    	    String formattedTime = String.format("%d:%02d", minutes, seconds);
+    	    currentDur.setText(formattedTime);
+    	}
      
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel CloseInfor;
@@ -886,6 +915,7 @@ OpenInfor();
     private javax.swing.JButton btnDown;
     private javax.swing.JButton btnRemove;
     private javax.swing.JButton btnUp;
+    private javax.swing.JLabel currentDur;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton5;
@@ -906,19 +936,22 @@ OpenInfor();
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JList<String> jPlaylist;
+    private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     private javax.swing.JLabel logoutForm;
     private javax.swing.JButton ply;
-    private javax.swing.JProgressBar progressBar;
+    private javax.swing.JProgressBar progressBar = new JProgressBar(0, duration);
     private javax.swing.JTextField searchfield;
     private javax.swing.JButton shuffleB;
     private javax.swing.JButton stop;
-    private javax.swing.JSlider volumnSlider;
+    private javax.swing.JLabel totaldur;
+    public javax.swing.Timer timerprogress;
+    private int currentTime = 0;
     // End of variables declaration//GEN-END:variables
-}
+
 //Class PlaceHolder
 class PlaceholderTextField extends JTextField implements FocusListener, CaretListener {
     /**
@@ -993,22 +1026,6 @@ class SearchResult {
         return index + " | " + itemName;
     }
 }
-
-//tình trạng : không dùng
-class CustomDefaultTableModel extends DefaultTableModel {
-    public CustomDefaultTableModel(Object[][] data, Object[] columnNames) {
-        super(data, columnNames);
-    }
-    @Override
-    public int getRowCount() {
-        int rowCount = super.getRowCount();
-        for (int i = 0; i < super.getRowCount(); i++) {
-            if (getValueAt(i, 0) == null) {
-                rowCount--;
-            }
-        }
-        return rowCount;
-    }
 }
 
 

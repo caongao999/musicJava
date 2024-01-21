@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="jar/jl1.0.1.jar"/>
 	<classpathentry kind="lib" path="jar/JTattoo-1.6.10.jar"/>
 	<classpathentry kind="lib" path="jar/mysql-connector-j-8.2.0.jar"/>
 	<classpathentry kind="lib" path="/musicPlayer/dist/lib/AbsoluteLayout.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/hungl/Downloads/Compressed/mp3spi.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/hungl/Downloads/Compressed/jmf-2.1.1e.jar/jmf-2.1.1e.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/hungl/Downloads/Compressed/jar_files/jaudiotagger-3.0.1.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/hungl/Downloads/Compressed/tritonus-share-0.3.7-2.jar/tritonus-share-0.3.7-2.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

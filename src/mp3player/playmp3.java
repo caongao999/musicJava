@@ -61,8 +61,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.plaf.metal.MetalSliderUI;
 
-//researching package
-import playmp3.system.Helpers;
 
 /**
  *

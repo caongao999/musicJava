@@ -376,7 +376,7 @@ public class Register1 extends javax.swing.JFrame {
         });
     }
     private boolean isUsernameExists(String username) {
-        String url = "jdbc:mysql://localhost:3306/loginmusic";
+        String url = "jdbc:mysql://localhost:3306/loginmusicold";
         String user = "root";
         String pass = "";
 
@@ -408,6 +408,10 @@ public class Register1 extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Tên người dùng đã tồn tại. Vui lòng chọn một tên khác.", "Lỗi", JOptionPane.ERROR_MESSAGE);
             return;
         }
+         if(password.length() <= 6 ) {
+            JOptionPane.showMessageDialog(this, "Mật khẩu quá dễ đoán, vui lòng đặt lại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            return;
+         }
 
         if (!password.equals(confirmPassword)) {
             JOptionPane.showMessageDialog(this, "Mật khẩu và xác nhận mật khẩu không khớp.", "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -416,7 +420,7 @@ public class Register1 extends javax.swing.JFrame {
         }
        
 
-        String url = "jdbc:mysql://localhost:3306/loginmusic";
+        String url = "jdbc:mysql://localhost:3306/loginmusicold";
         String user = "root";
         String pass = "";
 

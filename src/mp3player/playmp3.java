@@ -248,6 +248,8 @@ void putar() {
 
             play1 = (File) this.updateList.get(p1);
             initPlayer(play1);
+            updateCurrentTimeLabel();
+            startTimer();
             FileInputStream fis = new FileInputStream(play1);
             BufferedInputStream bis = new BufferedInputStream(fis);
             player = new javazoom.jl.player.Player(bis);
@@ -676,7 +678,7 @@ void playlistevent() {
 
         Home.add(currentDur, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 520, -1, -1));
 
-        Home.add(totaldur, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 520, 10, -1));
+        Home.add(totaldur, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 520, -1, -1));
 
         stop.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         stop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/pause-button.png"))); // NOI18N
@@ -1167,7 +1169,7 @@ OpenInfor();
     	    long minutes = currentTime / 60;
     	    long seconds = currentTime % 60;
     	    String formattedTime = String.format("%d:%02d", minutes, seconds);
-    	    currentDur.setText(""+formattedTime);
+    	    currentDur.setText(formattedTime);
     	    System.out.println(formattedTime);
     	}
      private void startTimer() {
@@ -1232,7 +1234,7 @@ OpenInfor();
     private javax.swing.JTextField jTextField2;
     private javax.swing.JLabel logoutForm;
     private javax.swing.JButton ply;
-    private JProgressBar progressBar =new JProgressBar (0,getDuration());
+    private JProgressBar progressBar =new JProgressBar (0,duration);
     private javax.swing.JLabel reportLabel;
     private javax.swing.JPanel screens;
     private javax.swing.JTextField searchfield;

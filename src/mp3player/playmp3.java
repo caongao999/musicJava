@@ -427,7 +427,7 @@ void playlistevent() {
         ply = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPlaylist = new javax.swing.JList<>();
-        searchfield = new javax.swing.JTextField();
+        searchfield = new PlaceholderTextField("Tìm kiếm");
         Report = new javax.swing.JPanel();
         reportLabel = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
@@ -508,7 +508,12 @@ void playlistevent() {
         jPanel2.add(jTextField2, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 50, 140, 20));
 
         InforPage.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 110, 310, 130));
-
+        timerprogress = new javax.swing.Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateProgressBar();
+            }
+        });
         jPanel3.setBackground(new java.awt.Color(204, 204, 255));
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -525,7 +530,6 @@ void playlistevent() {
         jPanel3.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 240, -1));
 
         InforPage.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 300, 310, 120));
-
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/cross.png"))); // NOI18N
         jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -648,7 +652,8 @@ void playlistevent() {
             }
         });
         Home.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 560, 120, -1));
-
+        totaldur.setText("");
+        currentDur.setText("");
         jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/fast-forward-button.png"))); // NOI18N
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -669,10 +674,8 @@ void playlistevent() {
         });
         Home.add(jRadioButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 530, -1, -1));
 
-        currentDur.setText("hf");
         Home.add(currentDur, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 520, -1, -1));
 
-        totaldur.setText("fs");
         Home.add(totaldur, new org.netbeans.lib.awtextra.AbsoluteConstraints(850, 520, 10, -1));
 
         stop.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
@@ -696,7 +699,6 @@ void playlistevent() {
 
         Home.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 70, 1210, 410));
 
-        searchfield.setText("Tìm kiếm");
         searchfield.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 searchfieldActionPerformed(evt);
@@ -904,35 +906,50 @@ OpenInfor();
     }//GEN-LAST:event_searchfieldActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        // TODO add your handling code here:
+        if (jRadioButton1.isSelected()) {
+            addAllFilesInDirectory();
+        } else {
+            add();
+        }
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
         // TODO add your handling code here:
+    	remove();
     }//GEN-LAST:event_btnRemoveActionPerformed
 
     private void btnUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpActionPerformed
         // TODO add your handling code here:
+    	up();
     }//GEN-LAST:event_btnUpActionPerformed
 
     private void btnDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDownActionPerformed
         // TODO add your handling code here:
+    	down();
     }//GEN-LAST:event_btnDownActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
+    	previous();
+    	 ply.setBackground(Color.GREEN);
+         stop.setBackground(Color.white);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void stopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_stopActionPerformed
+    	player.close();
+    	 stop.setBackground(Color.red);
+         ply.setBackground(Color.white);
+         }//GEN-LAST:event_stopActionPerformed
 
     private void plyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plyActionPerformed
         // TODO add your handling code here:
+    	putar();
     }//GEN-LAST:event_plyActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
+    	 next(); 
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jLabel15MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel15MouseClicked
@@ -982,8 +999,8 @@ OpenInfor();
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         // TODO add your handling code here:
         //code gửi mail"
-        final String username = "mduy.test2@gmail.com";
-        final String password = "rcgbbixsiexitbpp";
+        final String username = "mduy.test@gmail.com";
+        final String password = "picydjvluzpdddcl";
 
         Properties prop = new Properties();
 		prop.put("mail.smtp.host", "smtp.gmail.com");
@@ -1132,7 +1149,8 @@ OpenInfor();
          long minutess = duration/60;
          long secondss = duration%60;
          String formattedDuration = String.format("%02d:%02d", minutess, secondss);   
-         totaldur.setText(formattedDuration);
+         totaldur.setText(""+formattedDuration);
+         System.out.println(formattedDuration);
      }
      public int getDuration() {
          return duration;
@@ -1149,9 +1167,18 @@ OpenInfor();
     	    long minutes = currentTime / 60;
     	    long seconds = currentTime % 60;
     	    String formattedTime = String.format("%d:%02d", minutes, seconds);
-    	    currentDur.setText(formattedTime);
+    	    currentDur.setText(""+formattedTime);
+    	    System.out.println(formattedTime);
     	}
-     
+     private void startTimer() {
+         timerprogress = new javax.swing.Timer(1000, new ActionListener() {
+             @Override
+             public void actionPerformed(ActionEvent e) {
+                 updateProgressBar();
+             }
+         });
+         timerprogress.start();
+     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel CloseInfor;
     private javax.swing.JLabel CloseMenu;
@@ -1205,7 +1232,7 @@ OpenInfor();
     private javax.swing.JTextField jTextField2;
     private javax.swing.JLabel logoutForm;
     private javax.swing.JButton ply;
-    private javax.swing.JProgressBar progressBar;
+    private JProgressBar progressBar =new JProgressBar (0,getDuration());
     private javax.swing.JLabel reportLabel;
     private javax.swing.JPanel screens;
     private javax.swing.JTextField searchfield;
@@ -1216,6 +1243,7 @@ OpenInfor();
     private javax.swing.JTextField txtPassword;
     private javax.swing.JTextField txtTitle;
     private javax.swing.JTextField txtToEmail;
+    private javax.swing.Timer timerprogress;
     // End of variables declaration//GEN-END:variables
 
 //Class PlaceHolder
